@@ -4,7 +4,7 @@ import dbconfig as cfg
 mydb= mysql.connector.connect(
         host = cfg.mySQL['host'],
         user = cfg.mySQL['user'],
-        password = cfg.ySQL['password'],
+        password = cfg.mySQL['password'],
         # database = "datarepresentation",
         # auth_plugin='mysql_native_password'
         )

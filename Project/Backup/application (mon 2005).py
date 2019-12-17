@@ -5,7 +5,6 @@
 # Building a simple rest server
 
 from flask import Flask, session, url_for, redirect, jsonify, request, abort, make_response, render_template
-import secrets
 import json
 from StockDAO import stockDAO
 
@@ -13,68 +12,22 @@ from StockDAO import stockDAO
 
 app = Flask(__name__, static_url_path='',static_folder = '.')
 
-# Login simulation
-# htps://pythonise.com/series/learning-flask/flask-session-object
-
-
-users = {
-         "admin": {"username":"admin","password": "pass1"},
-        "david": {"username":"dave","password": "pass2"}
-        }
-
-
-secrets.token_urlsafe(16)
-app.config["SECRET_KEY"] = "ABCDEFG12345678"
-
-
-
-
 @app.route('/')
 def home():
+    return render_template("home.html")
+
+"""
+    if not 'username' in session:
+        return redirect(url_for('login'))
   
     return render_template("home.html")
 
+
 @app.route('/login')
 def login():
-
     return render_template("login.html")
 
 
-
-@app.route('/sign-in', methods=["GET", "POST"])
-def sign_in():
-    if request.method == "POST":
-        req = request.form 
-
-        username = req.get("username")
-        password = req.get("password")
-    
-    if not username in users:
-        print("Username not found")
-        return redirect(request.url)
-    else:
-        user = users["username"]
-
-    if not password == user["password"]:
-        print("Incorrect password")
-        return redirect(request.url)
-    else:
-        session["USERNAME"] = user["username"]
-        print("session username set")
-        return redirect(url_for("home"))
-    return render_template("login.html")
-
-
-
-@app.route('/logout')
-def logout():
-    return render_template("logout.html")
-    # session.pop('username',none)
-    # return redirect(url_for('logout')) # which will redirect you to teh login page as you are not logged in!
-    # click to login
-
-
-"""
 @app.route('/processlogin')
 def process_login():
     # check credentials
@@ -82,7 +35,12 @@ def process_login():
     # if bad request: return redirect(url_for('login'))
 
 
+@app.route('logout')
+def logout():
 
+    session.pop('username',none)
+    return redirect(url_for('logout')) # which will redirect you to teh login page as you are not logged in!
+    # click to login
 """
 
 # CRUD Methods

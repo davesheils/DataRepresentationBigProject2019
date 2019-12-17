@@ -9,12 +9,10 @@
 <link rel="stylesheet" type = "text/css" href="myCSS.css">
 
 
-<!--  
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
--->
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         
 <script>
@@ -51,13 +49,8 @@
       document.getElementById("doUpdateButton").style.display="block";
       document.getElementById("updateLabel").style.display="inline";// note display = inline
       var rowElement = buttonElement.parentNode.parentNode;
-      id = rowElement.cells[0].firstChild.textContent;
-      // var item = getItemFromRow(rowElement);
-      console.log("Item id is: " + id)
-      item = getItem(id)
-      console.log("back in showUpdate")
+      var item = getItemFromRow(rowElement);
       console.log(item);
-      console.log("Calling populateFormWithItem")
       populateFormWithItem(item);
     }
 
@@ -83,19 +76,6 @@
       document.getElementById("doCreateButton").style = "display:none";
       document.getElementById("createLabel").style = "display:none";
     }
-
-  function doUpdate()
-  {
-
-
-
-
-
-  }
-
-
-
-
 
   function showViewAll()
     {
@@ -156,22 +136,17 @@
   function getItemFromRow(rowElement)
     {
       // does what it says, in response to update button been pressed
-      // var item ={};
-      id = rowElement.cells[0].firstChild.textContent;
-      /*
-      // original code
+      var item ={};
       item.id = rowElement.cells[0].firstChild.textContent;
       item.Type = rowElement.cells[1].firstChild.textContent;
       item.Title = rowElement.cells[2].firstChild.textContent;
       item.Artist_Author = rowElement.cells[3].firstChild.textContent;
-      
       item.Genre = rowElement.cells[4].firstChild.textContent;
       item.Quantity = rowElement.cells[5].firstChild.textContent;
       item.Price = rowElement.cells[6].firstChild.textContent;
       item.Discogs_GoodReadsID = rowElement.cells[7].firstChild.textContent;
-      */
       console.log(item);      
-      return;
+      return item;
     }
 
   function populateFormWithItem(item)
@@ -183,12 +158,10 @@
       form.querySelector('select[name = "Type"]').value = item.Type;
       form.querySelector('input[name = "Title"]').value = item.Title;
       form.querySelector('input[name = "Artist_Author"]').value = item.Artist_Author;
-      
       form.querySelector('input[name = "Genre"]').value = item.Genre;
       form.querySelector('input[name = "Quantity"]').value = item.Quantity;
       form.querySelector('input[name = "Price"]').value = item.Price;
       form.querySelector('input[name = "Discogs_GoodReadsID"]').value = item.Discogs_GoodReadsID;
-      
     }
 
   function getItemFromForm()
@@ -235,28 +208,6 @@
           }
         });
       }
-
-      function getItem(id){
-      // This function gets a single item
-      host = window.location.origin
-      console.log("getItem called");
-      $.ajax({    
-        "url": host + "/stock/" + id,
-        "method":"GET",
-        "data":"",
-        "dataType": "JSON",
-        "success":function(item)
-          {
-          console.log(item);
-          console.log("returning to ...");
-          populateFormWithItem(item);
-          return;
-          },
-            "error":function(xhr,status,error){console.log("error: "+status+" msg:"+error);
-          }
-        });
-      }
-
 
   function createItem(item){
     host = window.location.origin
