@@ -7,21 +7,6 @@
     //document.getElementById("login").innerHTML  = "Please fill in all fields";
     
     
-    function setSession() {
-         // on submit, sets session variables
-        // var user = document.forms["myForm"]["fname"].value + " " + document.forms["myForm"]["sname"].value;
-        var username = document.forms["myForm"]["username"].value;
-        var password = document.forms["myForm"]["password"].value
-
-        alert("You are signing in. click to continue");
-        session["username"] = username;
-        session["password"] = password;
-        // sessionStorage.setItem("user", user);
-        console.log(session["username"])
-        console.log(session["password"])
-      }
-
-
 </script>
 
 <link rel="stylesheet" type="text/css" href="myCSS.css">
@@ -38,11 +23,8 @@
     
     <h2>Login Page</h2>
     <div id = "login"></div>
-        <!-- action="sign-in" method="POST" -->>
-        <form id = "myForm" onsubmit="setSession()">
-         <!-- the combination of the required attribute, and specifiying the email and date formats for the appropriate fields, 
-                in ncombination with setting the input type to "submit means that Javascript is not required to validate the form" 
-                On submission, javascript will redirect to home page        -->
+        <!-- action="/sign-in" method="POST" -->
+        <form id = "myForm" action="/sign-in" method="POST"">
             <fieldset>
                 <legend>Enter login details here</legend>
                 <br>

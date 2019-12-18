@@ -4,7 +4,7 @@
 
 # Building a simple rest server
 
-from flask import Flask, flash, session, url_for, redirect, jsonify, request, abort, make_response, render_template
+from flask import Flask, session, url_for, redirect, jsonify, request, abort, make_response, render_template
 import secrets
 import json
 from StockDAO import stockDAO
@@ -15,52 +15,75 @@ app = Flask(__name__, static_url_path='',static_folder = '.')
 
 # Login simulation
 # htps://pythonise.com/series/learning-flask/flask-session-object
-# secrets.token_urlsafe(16)
-app.secret_key = "ABCDEFG12345678"
 
-users = {"username":"admin","password":"pass1"}
+
+users = {
+         "admin": {"username":"admin","password": "pass1"},
+        "david": {"username":"dave","password": "pass2"}
+        }
+
+
+secrets.token_urlsafe(16)
+app.config["SECRET_KEY"] = "ABCDEFG12345678"
+
+
+
 
 @app.route('/')
-def index():
-    if not 'username' in session:
-        return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
-    else:
-        return render_template("home.html")
-        
-@app.route('/home')
 def home():
-    if not 'username' in session:
-        return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
-    else:
-        return render_template("home.html")
-
+  
+    return render_template("home.html")
 
 @app.route('/login')
 def login():
+
     return render_template("login.html")
 
-@app.route('/logout')
-def logout():
-    # return render_template("logout.html")
-    session.pop('username', None)
-    flash("You are now logged out")
-    return render_template("logout.html") # which will redirect you to teh login page as you are not logged in!
-    # click to login
+
 
 @app.route('/sign-in', methods=["GET", "POST"])
 def sign_in():
     if request.method == "POST":
         req = request.form 
+
         username = req.get("username")
         password = req.get("password")
-        # require for loop to get list of users and validate
-        if username == users["username"] and password == users["password"]:
-            session["username"] = username
-            return render_template("home.html")
+    
+    if not username in users:
+        print("Username not found")
+        return redirect(request.url)
+    else:
+        user = users["username"]
 
-        else:
-            return redirect(url_for("login"))
+    if not password == user["password"]:
+        print("Incorrect password")
+        return redirect(request.url)
+    else:
+        session["USERNAME"] = user["username"]
+        print("session username set")
+        return redirect(url_for("home"))
+    return render_template("login.html")
 
+
+
+@app.route('/logout')
+def logout():
+    return render_template("logout.html")
+    # session.pop('username',none)
+    # return redirect(url_for('logout')) # which will redirect you to teh login page as you are not logged in!
+    # click to login
+
+
+"""
+@app.route('/processlogin')
+def process_login():
+    # check credentials
+    # if good request: 
+    # if bad request: return redirect(url_for('login'))
+
+
+
+"""
 
 # CRUD Methods
 
