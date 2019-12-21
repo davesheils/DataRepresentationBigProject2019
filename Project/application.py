@@ -5,6 +5,7 @@
 # Building a simple rest server
 
 from flask import Flask, flash, session, url_for, redirect, jsonify, request, abort, make_response, render_template
+import requests
 import secrets
 import json
 from StockDAO import stockDAO
@@ -18,22 +19,31 @@ app = Flask(__name__, static_url_path='',static_folder = '.')
 # secrets.token_urlsafe(16)
 app.secret_key = "ABCDEFG12345678"
 
-users = {"username":"admin","password":"pass1"}
+users = [
+        {"username":"admin","password":"pass1"},
+        {"username":"davesheils","password":"pass2"},
+        {"username":"andrewbeatty","password":"pass3"}
+        ]
+
 
 @app.route('/')
-def index():
+def home():
     if not 'username' in session:
-        return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
+        # return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
+        flash("You are not logged in. Redirecting you to login page.")
+        return redirect(url_for("login"))
     else:
         return render_template("home.html")
-        
+
+"""
+
 @app.route('/home')
 def home():
     if not 'username' in session:
         return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
     else:
         return render_template("home.html")
-
+"""
 
 @app.route('/login')
 def login():
@@ -54,11 +64,13 @@ def sign_in():
         username = req.get("username")
         password = req.get("password")
         # require for loop to get list of users and validate
-        if username == users["username"] and password == users["password"]:
-            session["username"] = username
-            return render_template("home.html")
-
+        for user in users:
+            if username == user["username"] and password == user["password"]:
+                session["username"] = username
+                flash("You are logged in")
+                return redirect(url_for("home"))
         else:
+            flash("User credentials not valid. Returning you to login screen")
             return redirect(url_for("login"))
 
 
