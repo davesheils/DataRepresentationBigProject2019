@@ -8,7 +8,7 @@ from flask import Flask, flash, session, url_for, redirect, jsonify, request, ab
 import secrets
 import json
 from StockDAO import stockDAO
-
+# import discogs and wikipedia python clients
 import discogs_client
 import wikipedia
 
@@ -35,10 +35,11 @@ def home():
     else:
         return render_template("home.html", user = session['username'])
 
-@app.route('/moreinfo/<int:id>', methods=["GET", "POST"])
+@app.route('/moreinfo/<int:id>')
 def moreInfo(id):
     d = discogs_client.Client('davesApp/0.1')
     release = d.release(id)
+    # This needs to be tweaked to ensure correct album summary is returned
     title = release.title + " (Album)"
     #  get artist .. bit of parsing required here as artist object is a list
     artist = str(release.artists[0]).split("'")[1]
@@ -46,7 +47,7 @@ def moreInfo(id):
     summary = wikipedia.page(title).summary
     # create tracklist
     tracklist = release.tracklist
-    return render_template("moreinfo.html", title = title, artist = artist, genre = genres, summary = summary, tracklist = tracklist)
+    return render_template("moreinfo.html", title = title, artist = artist, genres = genres, summary = summary, tracklist = tracklist, user = session['username'])
 
 
 @app.route('/login')

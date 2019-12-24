@@ -1,6 +1,6 @@
 import mysql.connector
 import dbconfig as cfg
-from StockDAO import stockDAO
+# from StockDAO import stockDAO
 import csv
 
 try:
@@ -30,7 +30,10 @@ try:
         stock = [tuple(line) for line in csv.reader(f)]
         sql = "insert into stock (Type, Title, Artist_Author, Genre, Quantity, Price, Discogs_GoodReadsID) values (%s, %s,%s, %s, %s, %s, %s)"
         for item in stock[1:]: # i.e all tuples in stock except the header line
-            stockDAO.create(item)
+            myCursor.execute(sql, item)
+            mydb.commit()
+            print("created item ", item[1])
+    
 except mysql.connector.Error as err:
     print("Could not create an populate table")
     print(err)

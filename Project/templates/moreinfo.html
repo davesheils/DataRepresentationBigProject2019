@@ -6,7 +6,7 @@
 <script> 
 </script>
 
-<link rel="stylesheet" type="text/css" href="myCSS.css">
+<link rel="stylesheet" type="text/css" href="../myCSS.css">
 
 </head>
 <body>
@@ -14,25 +14,38 @@
 <div class="header">
   <h1>Rockers Resource - Music Info Website</h1>
 </div>
+<div class = "menu">
+  <ul>
+    <li><a href ="/">Home</a></li>
+    <li><a href ="/logout">Logout</a></li>
+    <li>You are logged in as {{user}}</li>
+  </ul>
+</div>
+
 
 <div class="row">
 
   <div class="col-6 col-s-9">
     
-    <p>id: {{ id }}</p>
+    <p>Summary Info (courtesy of discogs)</p>
     <p>Album title: {{ title }}</p>
     <p>Artist: {{ artist }}</p>
-    <p>Genre: {{ genre }}</p>
+    <p>Genre:</p>
+    <ul style="list-style-type:none">
+      {% for genre in genres %}
+      <li>{{genre}}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    <p>Tracklist</p>
     
-    <p>Summary (courtesy of wikipedia)</p>
-    <p>{{ summary }}</p>
-    
-    <div id = "tracklist"></div>
-    <ul>
-      {% for track in tracklist%}
+    <ul style="list-style-type:none">
+      {% for track in tracklist %}
       <li>{{track}}</li>
       {% endfor %}
     </ul>
+    <p><b>Summary (courtesy of wikipedia)</b></p>
+    <p>{{ summary }}</p>
   </div>
 
 </div>

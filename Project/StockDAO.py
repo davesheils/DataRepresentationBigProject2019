@@ -16,7 +16,7 @@ class StockDAO:
                 password = cfg.mySQL['password'],
                 database = cfg.mySQL['database'],
                 pool_name = 'my_connection_pool',
-                pool_size = 6
+                pool_size = 10
                 # auth_plugin='mysql_native_password
                 )
             return db
