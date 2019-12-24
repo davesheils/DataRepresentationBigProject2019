@@ -5,10 +5,12 @@
 # Building a simple rest server
 
 from flask import Flask, flash, session, url_for, redirect, jsonify, request, abort, make_response, render_template
-import requests
 import secrets
 import json
 from StockDAO import stockDAO
+
+import discogs_client
+import wikipedia
 
 # from flask_cors import CORS # review if this is necessary
 
@@ -29,21 +31,23 @@ users = [
 @app.route('/')
 def home():
     if not 'username' in session:
-        # return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
-        flash("You are not logged in. Redirecting you to login page.")
         return redirect(url_for("login"))
     else:
-        return render_template("home.html")
+        return render_template("home.html", user = session['username'])
 
-"""
+@app.route('/moreinfo/<int:id>', methods=["GET", "POST"])
+def moreInfo(id):
+    d = discogs_client.Client('davesApp/0.1')
+    release = d.release(id)
+    title = release.title + " (Album)"
+    #  get artist .. bit of parsing required here as artist object is a list
+    artist = str(release.artists[0]).split("'")[1]
+    genres = release.genres 
+    summary = wikipedia.page(title).summary
+    # create tracklist
+    tracklist = release.tracklist
+    return render_template("moreinfo.html", title = title, artist = artist, genre = genres, summary = summary, tracklist = tracklist)
 
-@app.route('/home')
-def home():
-    if not 'username' in session:
-        return "You are not logged in. <br><a href ='/login'></b>click here to log in</b></a>"
-    else:
-        return render_template("home.html")
-"""
 
 @app.route('/login')
 def login():
@@ -53,9 +57,7 @@ def login():
 def logout():
     # return render_template("logout.html")
     session.pop('username', None)
-    flash("You are now logged out")
-    return render_template("logout.html") # which will redirect you to teh login page as you are not logged in!
-    # click to login
+    return render_template("logout.html") 
 
 @app.route('/sign-in', methods=["GET", "POST"])
 def sign_in():
@@ -72,20 +74,11 @@ def sign_in():
         else:
             flash("User credentials not valid. Returning you to login screen")
             return redirect(url_for("login"))
-
-
 # CRUD Methods
 
 # READ with ['GET']
 @app.route('/stock', methods=['GET'])
 def getAll():
-    """
-    code to check if you are logged in before you can access data
-    should be part of all CRUD methods
-
-    if not 'username' in session:
-        abort(401)
-     """
     stock = stockDAO.getAll()
     return jsonify(stock) #jsonify comes from flask. compare with week 5, w
 # curl -i http://localhost:5000/stock
